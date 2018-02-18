@@ -2,3 +2,16 @@
 
 /.idea
 /spring-jms-servicebus-demo.iml
+spring-jms-servicebus-demo.ipr
+spring-jms-servicebus-demo.iws
+message-receiver/message-receiver.iml
+message-receiver/target/
+message-send/message-send.iml
+
+message-send/target/
+topic-receiver/src/test/
+topic-receiver/target/
+topic-receiver/topic-receiver.iml
+topic-send/src/test/
+topic-send/target/
+topic-send/topic-send.iml

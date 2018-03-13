@@ -10,6 +10,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
 import javax.jms.*;
+import java.util.UUID;
 
 @Configuration
 @ComponentScan
@@ -50,7 +51,11 @@ public class TopicSenderApp {
         Topic topic = context.getBean(Topic.class);
         jmsTemplate.send(topic, new MessageCreator() {
             public Message createMessage(Session session) throws JMSException {
-                return session.createTextMessage("Hello World");
+
+                TextMessage hw = session.createTextMessage("Hello World");
+                hw.setJMSMessageID(UUID.randomUUID().toString());
+                hw.setJMSCorrelationID(UUID.randomUUID().toString());
+                return hw;
             }
         });
         Thread.sleep(5000);

@@ -1,7 +1,6 @@
 package com.rosecorp;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
-import org.apache.qpid.jms.JmsQueue;
 import org.apache.qpid.jms.JmsTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.jms.annotation.EnableJms;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
-import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.listener.SimpleMessageListenerContainer;
+import org.springframework.util.ErrorHandler;
 
 import javax.jms.*;
 
@@ -50,14 +47,23 @@ public class TopicReceiverApp {
         container.setDestination(jmsTopic);
         container.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
         container.setSessionTransacted(false);
+
+
+        container.setErrorHandler(new ErrorHandler() {
+            public void handleError(Throwable throwable) {
+                System.out.println("handling exceptions>>>>> "+ throwable);
+            }
+        });
+
         container.setMessageListener(new MessageListener() {
             public void onMessage(Message message) {
-                try {
+//                try {
                     TextMessage receivedMessage = (TextMessage) message;
-                    System.out.println("============================"+ receivedMessage.getText());
-                } catch (JMSException e) {
-                    e.printStackTrace();
-                }
+                    throw new CustomException("runtime exception after receiving msg");
+//                    System.out.println("============================" + receivedMessage.getText());
+//                } catch (JMSException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
         return container;

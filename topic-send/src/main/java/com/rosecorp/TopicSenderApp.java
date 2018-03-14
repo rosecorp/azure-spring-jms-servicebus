@@ -31,8 +31,7 @@ public class TopicSenderApp {
 
     @Bean
     ConnectionFactory getConnectionFactory() {
-        ConnectionFactory connectionFactory = new JmsConnectionFactory(userName, password, hostName);
-        return connectionFactory;
+        return  new JmsConnectionFactory(userName, password, hostName);
     }
 
     @Bean
@@ -49,6 +48,7 @@ public class TopicSenderApp {
         ApplicationContext context = new AnnotationConfigApplicationContext(TopicSenderApp.class);
         JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
         Topic topic = context.getBean(Topic.class);
+
         jmsTemplate.send(topic, new MessageCreator() {
             public Message createMessage(Session session) throws JMSException {
 

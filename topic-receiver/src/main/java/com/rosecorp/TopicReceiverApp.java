@@ -2,6 +2,7 @@ package com.rosecorp;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.apache.qpid.jms.JmsTopic;
+import org.apache.qpid.jms.policy.JmsDefaultRedeliveryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,8 +36,12 @@ public class TopicReceiverApp {
 
     @Bean
     ConnectionFactory getConnectionFactory() {
-        ConnectionFactory connectionFactory = new JmsConnectionFactory(userName, password, hostName);
-        return connectionFactory;
+        JmsConnectionFactory jmsConnectionFactory = new JmsConnectionFactory(userName, password, hostName);
+        JmsDefaultRedeliveryPolicy jmsDefaultRedeliveryPolicy = new JmsDefaultRedeliveryPolicy();
+        jmsDefaultRedeliveryPolicy.setMaxRedeliveries(10);
+        jmsConnectionFactory.setRedeliveryPolicy(jmsDefaultRedeliveryPolicy);
+
+        return jmsConnectionFactory;
     }
 
     @Bean
